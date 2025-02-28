@@ -36,10 +36,11 @@ public class SecurityConfig {
     @Autowired
     SecurityCandidateFilter securityCandidateFilter;
 
-    private static final String[] SWAGGER_LIST = {
+    private static final String[] PERMIT_ALL_LIST = {
       "/swagger-ui/**",
       "/v3/api-docs/**",
-      "/swagger-resources/**"
+      "/swagger-resources/**",
+            "/actuator/**"
     };
 
     @Bean // cria um objeto que o Spring vai gerenciar e usar para configurar a segurança da aplicação
@@ -52,7 +53,8 @@ public class SecurityConfig {
                             .requestMatchers("/company/").permitAll() // se a requisição for no /company, vai permitir
                             .requestMatchers("/company/auth").permitAll()
                             .requestMatchers("/candidate/auth").permitAll()
-                            .requestMatchers(SWAGGER_LIST).permitAll();
+                            .requestMatchers(PERMIT_ALL_LIST).permitAll()
+                            .requestMatchers("/actuator/prometheus").permitAll();
                     auth.anyRequest().authenticated(); // qualquer outra rota será com autenticação
                 })
                 .addFilterBefore(securityCandidateFilter, BasicAuthenticationFilter.class)
